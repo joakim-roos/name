@@ -1,22 +1,23 @@
-"use client";
+'use client';
 
-import { useRouter } from "next/navigation";
-import { useEffect } from "react";
-import { useUser } from "~/providers/AuthProvider/AuthProvider";
-import { api } from "~/utils/api";
+import { useRouter } from 'next/navigation';
+import { useEffect } from 'react';
+
+import { useUser } from '~/providers/AuthProvider/AuthProvider';
+import { api } from '~/utils/api';
 
 export const withPrivateRoute = <T extends object>(
-  WrappedComponent: React.FunctionComponent<T>,
+  WrappedComponent: React.FunctionComponent<T>
 ) => {
   const ComponentWithPrivateRoute = (props: T) => {
     const router = useRouter();
 
-    const { user, isLoading } = useUser();
+    const { isLoading, user } = useUser();
     const { isLoading: isProfileLoading } = api.auth.getProfile.useQuery();
     const isUserDataLoaded = !isLoading && !isProfileLoading;
     useEffect(() => {
       if (!user && isUserDataLoaded) {
-        router.push("/login");
+        router.push('/login');
       }
     }, [user, isUserDataLoaded, router]);
 

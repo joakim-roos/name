@@ -1,8 +1,8 @@
 "use client";
 
+import { useRouter } from "next/navigation";
 import React, { useEffect } from "react";
 
-import { useRouter } from "next/navigation";
 import { useUser } from "~/providers/AuthProvider/AuthProvider";
 
 export const withPublicRoute = <T extends object>(
@@ -10,7 +10,7 @@ export const withPublicRoute = <T extends object>(
 ) => {
   const ComponentwithPublicRoute = (props: T) => {
     const router = useRouter();
-    const { user, isLoading } = useUser();
+    const { isLoading, user } = useUser();
     const isUserDataLoaded = !isLoading;
 
     useEffect(() => {

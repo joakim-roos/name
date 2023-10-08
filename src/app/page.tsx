@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+
 import { api } from "~/utils";
 
 const Homepage = () => {

@@ -1,31 +1,28 @@
-import { createClient } from "@supabase/supabase-js";
+import { createClientComponentClient } from '@supabase/auth-helpers-nextjs';
 
-import { type Database } from "./supabaseTypes";
+import { type Database } from './supabaseTypes';
 
-import { env } from "~/env.mjs";
+// export const getServiceSupabase = () =>
+//   createClient<Database>(
+//     env.NEXT_PUBLIC_SUPABASE_URL,
+//     env.SUPABASE_SERVICE_KEY,
+//     {
+//       auth: {
+//         autoRefreshToken: false,
+//         persistSession: false,
+//       },
+//     },
+//   );
 
-export const getServiceSupabase = () =>
-  createClient<Database>(
-    env.NEXT_PUBLIC_SUPABASE_URL,
-    env.SUPABASE_SERVICE_KEY,
-    {
-      auth: {
-        autoRefreshToken: false,
-        persistSession: false,
-      },
-    },
-  );
+const clientSupabase = createClientComponentClient<Database>();
 
-export const clientSupabase = createClient<Database>(
-  env.NEXT_PUBLIC_SUPABASE_URL,
-  env.NEXT_PUBLIC_SUPABASE_ANON_KEY,
-);
+const serviceSupabase = () => createClientComponentClient<Database>();
 
 export const supabase = () =>
-  typeof window === "undefined" ? getServiceSupabase() : clientSupabase;
+  typeof window === 'undefined' ? serviceSupabase() : clientSupabase;
 
 export const getUserAsAdmin = async (token: string) => {
-  const { data, error } = await getServiceSupabase().auth.getUser(token);
+  const { data, error } = await serviceSupabase().auth.getUser(token);
 
   if (error) {
     throw error;
@@ -35,5 +32,5 @@ export const getUserAsAdmin = async (token: string) => {
 };
 
 export const storageBucketsNames = {
-  portfolioFiles: "portfolio-files",
+  portfolioFiles: 'portfolio-files',
 };

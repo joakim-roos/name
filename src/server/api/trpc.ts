@@ -12,6 +12,7 @@ import superjson from "superjson";
 import { ZodError } from "zod";
 
 import { db } from "~/server/db";
+
 import { getUserAsAdmin } from "../supabase/supabaseClient";
 
 /**
@@ -40,8 +41,7 @@ export const createTRPCContext = async (_opts: CreateNextContextOptions) => {
  */
 
 const t = initTRPC.context<typeof createTRPCContext>().create({
-  transformer: superjson,
-  errorFormatter({ shape, error }) {
+  errorFormatter({ error, shape }) {
     return {
       ...shape,
       data: {
@@ -51,6 +51,7 @@ const t = initTRPC.context<typeof createTRPCContext>().create({
       },
     };
   },
+  transformer: superjson,
 });
 
 /**

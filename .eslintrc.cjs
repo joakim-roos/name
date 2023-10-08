@@ -1,38 +1,45 @@
 // eslint-disable-next-line @typescript-eslint/no-var-requires
-const path = require("path");
+const path = require('path');
 
 /** @type {import("eslint").Linter.Config} */
 const config = {
+  extends: [
+    'next/core-web-vitals',
+    'plugin:perfectionist/recommended-natural',
+    'plugin:@typescript-eslint/recommended',
+  ],
   overrides: [
     {
-      extends: [
-        "plugin:@typescript-eslint/recommended-requiring-type-checking",
-      ],
-      files: ["*.ts", "*.tsx"],
+      extends: ['plugin:@typescript-eslint/recommended-requiring-type-checking'],
+      files: ['*.ts', '*.tsx'],
       parserOptions: {
-        project: path.join(__dirname, "tsconfig.json"),
+        project: path.join(__dirname, 'tsconfig.json'),
       },
     },
   ],
-  parser: "@typescript-eslint/parser",
+  parser: '@typescript-eslint/parser',
   parserOptions: {
-    project: path.join(__dirname, "tsconfig.json"),
+    project: path.join(__dirname, 'tsconfig.json'),
   },
-  plugins: ["@typescript-eslint"],
-  extends: ["next/core-web-vitals", "plugin:@typescript-eslint/recommended"],
+  plugins: ['@typescript-eslint', 'perfectionist'],
+
   rules: {
-    "@typescript-eslint/consistent-type-imports": [
-      "warn",
+    '@typescript-eslint/consistent-type-imports': [
+      'warn',
       {
-        prefer: "type-imports",
-        fixStyle: "inline-type-imports",
+        fixStyle: 'inline-type-imports',
+        prefer: 'type-imports',
       },
     ],
-    "react/jsx-curly-brace-presence": [
-      "warn",
-      { props: "never", children: "never" },
+    '@typescript-eslint/no-unused-vars': ['warn', { argsIgnorePattern: '^_' }],
+    'perfectionist/sort-objects': [
+      'error',
+      {
+        order: 'asc',
+        type: 'natural',
+      },
     ],
-    "@typescript-eslint/no-unused-vars": ["warn", { argsIgnorePattern: "^_" }],
+    'react/jsx-curly-brace-presence': ['warn', { children: 'never', props: 'never' }],
   },
 };
 

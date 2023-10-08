@@ -36,9 +36,11 @@ model FlowState {
   createdAt            DateTime?           @map("created_at") @db.Timestamptz(6)
   updatedAt            DateTime?           @map("updated_at") @db.Timestamptz(6)
   authenticationMethod String              @map("authentication_method")
+  samlRelayStates      SamlRelayStates[]
 
   @@index([authCode], map: "idx_auth_code")
   @@index([userId, authenticationMethod], map: "idx_user_id_auth_method")
+  @@index([createdAt(sort: Desc)])
   @@map("flow_state")
   @@schema("auth")
 }
@@ -97,6 +99,7 @@ model MfaChallenges {
   ipAddress  String     @map("ip_address") @db.Inet
   mfaFactors MfaFactors @relation(fields: [factorId], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "mfa_challenges_auth_factor_id_fkey")
 
+  @@index([createdAt(sort: Desc)], map: "mfa_challenge_created_at_idx")
   @@map("mfa_challenges")
   @@schema("auth")
 }
@@ -115,6 +118,7 @@ model MfaFactors {
   users         Users           @relation(fields: [userId], references: [id], onDelete: Cascade, onUpdate: NoAction)
 
   @@index([userId, createdAt], map: "factor_id_created_at_idx")
+  @@index([userId])
   @@map("mfa_factors")
   @@schema("auth")
 }
@@ -136,6 +140,7 @@ model RefreshTokens {
   @@index([instanceId, userId])
   @@index([parent])
   @@index([sessionId, revoked])
+  @@index([updatedAt(sort: Desc)])
   @@map("refresh_tokens")
   @@schema("auth")
 }
@@ -169,10 +174,13 @@ model SamlRelayStates {
   fromIpAddress String?      @map("from_ip_address") @db.Inet
   createdAt     DateTime?    @map("created_at") @db.Timestamptz(6)
   updatedAt     DateTime?    @map("updated_at") @db.Timestamptz(6)
+  flowStateId   String?      @map("flow_state_id") @db.Uuid
+  flowState     FlowState?   @relation(fields: [flowStateId], references: [id], onDelete: Cascade, onUpdate: NoAction)
   ssoProviders  SsoProviders @relation(fields: [ssoProviderId], references: [id], onDelete: Cascade, onUpdate: NoAction)
 
   @@index([forEmail])
   @@index([ssoProviderId])
+  @@index([createdAt(sort: Desc)])
   @@map("saml_relay_states")
   @@schema("auth")
 }
@@ -200,6 +208,7 @@ model Sessions {
 
   @@index([userId])
   @@index([userId, createdAt], map: "user_id_created_at_idx")
+  @@index([notAfter(sort: Desc)])
   @@map("sessions")
   @@schema("auth")
 }
@@ -277,25 +286,10 @@ model Users {
   identities               Identities[]
   mfaFactors               MfaFactors[]
   sessions                 Sessions[]
-  profiles                 Profiles?
 
   @@index([instanceId])
   @@map("users")
   @@schema("auth")
-}
-
-/// This table contains check constraints and requires additional setup for migrations. Visit https://pris.ly/d/check-constraints for more info.
-/// This model contains row level security and requires additional setup for migrations. Visit https://pris.ly/d/row-level-security for more info.
-model Profiles {
-  id        String    @id @db.Uuid
-  updatedAt DateTime? @map("updated_at") @db.Timestamptz(6)
-  username  String?   @unique
-  fullName  String?   @map("full_name")
-  avatarUrl String?   @map("avatar_url")
-  users     Users     @relation(fields: [id], references: [id], onDelete: Cascade, onUpdate: NoAction)
-
-  @@map("profiles")
-  @@schema("public")
 }
 
 enum AalLevel {

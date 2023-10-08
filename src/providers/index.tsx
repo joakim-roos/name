@@ -1,13 +1,15 @@
 "use client";
 
 import { ThemeProvider } from "next-themes";
-import { AuthProvider } from "./AuthProvider/AuthProvider";
+import React, { type PropsWithChildren } from "react";
+
+import { api } from "~/utils";
+
 import {
   AnalyticsProvider,
   UmamiAnalyticsProvider,
 } from "./AnalyticsProvider/AnalyticsProvider";
-import { api } from "~/utils";
-import React, { type PropsWithChildren } from "react";
+import { AuthProvider } from "./AuthProvider/AuthProvider";
 
 function ProvidersBase({ children }: { children: React.ReactNode }) {
   return (
