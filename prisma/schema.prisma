@@ -286,10 +286,25 @@ model Users {
   identities               Identities[]
   mfaFactors               MfaFactors[]
   sessions                 Sessions[]
+  profiles                 Profiles?
 
   @@index([instanceId])
   @@map("users")
   @@schema("auth")
+}
+
+/// This table contains check constraints and requires additional setup for migrations. Visit https://pris.ly/d/check-constraints for more info.
+/// This model contains row level security and requires additional setup for migrations. Visit https://pris.ly/d/row-level-security for more info.
+model Profiles {
+  id        String    @id @db.Uuid
+  updatedAt DateTime? @map("updated_at") @db.Timestamptz(6)
+  username  String?   @unique
+  fullName  String?   @map("full_name")
+  avatarUrl String?   @map("avatar_url")
+  users     Users     @relation(fields: [id], references: [id], onDelete: Cascade, onUpdate: NoAction)
+
+  @@map("profiles")
+  @@schema("public")
 }
 
 enum AalLevel {

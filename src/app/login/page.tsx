@@ -1,34 +1,34 @@
-"use client";
+'use client';
 
-import { Button } from "~/components/ui/button";
-import { supabase } from "~/server/supabase/supabaseClient";
+import { Button } from '~/components/ui/button';
+import { client } from '~/server/supabase/client';
 
-const testAccounts = [{ email: "j.roos@hotmail.com", password: "1234" }];
+const testAccounts = [{ email: 'j.roos@hotmail.com', password: '1234' }];
 
 const Page = () => {
   return (
     <div>
-      {process.env.NODE_ENV === "development" && (
+      {process.env.NODE_ENV === 'development' && (
         <div>
           {testAccounts.map((account, index) => (
             <div key={index}>
               <Button
                 onClick={() => {
-                  void supabase().auth.signInWithPassword(account);
+                  void client.auth.signInWithPassword(account);
                 }}
               >
                 Login {account.email}
               </Button>
               <Button
                 onClick={() => {
-                  void supabase().auth.signUp(account);
+                  void client.auth.signUp(account);
                 }}
               >
                 Register {account.email}
               </Button>
               <Button
                 onClick={() => {
-                  void supabase().auth.signOut();
+                  void client.auth.signOut();
                 }}
               >
                 Signout {account.email}

@@ -8,6 +8,7 @@ export const metadata = {
 };
 
 function RootLayout({ children }: { children: React.ReactNode }) {
+  console.log('it ran, without auth');
   return (
     <>
       <html lang='en'>

@@ -31,6 +31,14 @@ const config = {
         prefer: 'type-imports',
       },
     ],
+    '@typescript-eslint/no-misused-promises': [
+      2,
+      {
+        checksVoidReturn: {
+          attributes: false,
+        },
+      },
+    ],
     '@typescript-eslint/no-unused-vars': ['warn', { argsIgnorePattern: '^_' }],
     'perfectionist/sort-objects': [
       'error',
